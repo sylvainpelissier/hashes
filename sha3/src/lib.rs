@@ -80,7 +80,7 @@ use digest::{
         XofReaderCoreWrapper,
     },
     generic_array::typenum::Unsigned,
-    HashMarker, Output,
+    HashMarker, Output
 };
 
 #[macro_use]
@@ -213,5 +213,12 @@ pub(crate) fn left_encode(val: u64, b: &mut [u8; 9]) -> &[u8] {
     b[1..].copy_from_slice(&val.to_be_bytes());
     let i = b[1..8].iter().take_while(|&&a| a == 0).count();
     b[i] = (8 - i) as u8;
+    &b[i..]
+}
+#[inline(always)]
+pub(crate) fn right_encode(val: u64, b: &mut [u8; 9]) -> &[u8] {
+    b[..8].copy_from_slice(&val.to_be_bytes());
+    let i = b[0..7].iter().take_while(|&&a| a == 0).count();
+    b[8] = (8 - i) as u8;
     &b[i..]
 }
